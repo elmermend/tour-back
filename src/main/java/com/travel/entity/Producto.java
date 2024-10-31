@@ -4,9 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 // Clase que representa un producto
 @Entity
@@ -20,24 +22,10 @@ public class Producto {
     private String region; // Región donde se ofrece el producto
     private int cantidad; // Cantidad disponible
     private double precio; // Precio del producto
-    private List<String> imagenes; // Lista para múltiples imágenes del producto
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
+    private List<Imagen> imagenes; // Lista para múltiples imágenes del producto
     private Date fecha; // Fecha de disponibilidad del producto
     private int categoria; // Categoría si es en grupo, solo o mujeres
-
-    public Producto() {}
-
-    // Constructor que inicializa los atributos
-    public Producto(long id, String nombre, String descripcion, String region, int cantidad, double precio, List<String> imagenes, Date fecha, int categoria) {
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.region = region;
-        this.cantidad = cantidad;
-        this.precio = precio;
-        this.imagenes = imagenes;
-        this.fecha = fecha;
-        this.categoria = categoria;
-    }
 
     public long getId() {
         return id;
@@ -87,11 +75,11 @@ public class Producto {
         this.precio = precio;
     }
 
-    public List<String> getImagenes() {
+    public List<Imagen> getImagenes() {
         return imagenes;
     }
 
-    public void setImagenes(List<String> imagenes) {
+    public void setImagenes(List<Imagen> imagenes) {
         this.imagenes = imagenes;
     }
 
@@ -110,5 +98,4 @@ public class Producto {
     public void setCategoria(int categoria) {
         this.categoria = categoria;
     }
-    
 }

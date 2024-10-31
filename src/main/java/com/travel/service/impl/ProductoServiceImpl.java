@@ -7,8 +7,10 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.travel.entity.Imagen;
 import com.travel.entity.Producto;
 import com.travel.exception.TravelRepositoryException;
+import com.travel.repository.ImagenRepository;
 import com.travel.repository.ProductoRepository;
 import com.travel.service.ProductoService;
 
@@ -17,6 +19,9 @@ import com.travel.service.ProductoService;
 public class ProductoServiceImpl implements ProductoService {
     @Autowired
     private ProductoRepository productoRepository;   
+
+    @Autowired
+    private ImagenRepository imagenRepository;
 
     // Método para listar todos los productos
     public List<Producto> listarProductos() {
@@ -47,7 +52,7 @@ public class ProductoServiceImpl implements ProductoService {
         }
     }
 
-    public void deleteProducto(long id) throws TravelRepositoryException{
+    public void deleteProducto(long id) throws TravelRepositoryException {
         if (productoRepository.existsById(id)) {
             productoRepository.deleteById(id);
         } else {
@@ -55,10 +60,15 @@ public class ProductoServiceImpl implements ProductoService {
         }
     }
 
+    public void adicionarImagen(Imagen imagen) {
+        imagenRepository.save(imagen);
+    }
 
-     
-    
-
+    public void borrarImagen(long id) throws TravelRepositoryException {
+        if (imagenRepository.existsById(id)) {
+            imagenRepository.deleteById(id);
+        } else {
+            throw new TravelRepositoryException(id + "Imagen no encontrada");
+        }
+    }
 }
-
-
