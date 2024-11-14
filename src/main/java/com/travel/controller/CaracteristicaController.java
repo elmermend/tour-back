@@ -24,31 +24,26 @@ public class CaracteristicaController {
     }
 
     @GetMapping
-    @PreAuthorize("permitAll()")
     public List<CaracteristicaSalidaDto> listarTodas() {
         return caracteristicaService.listarTodas();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<CaracteristicaSalidaDto> obtenerPorId(@PathVariable Long id) {
         return new ResponseEntity<>(caracteristicaService.obtenerCaracteristicaDtoPorId(id), HttpStatus.OK);
     }
 
     @PostMapping
-    @PreAuthorize("permitAll()")
     public ResponseEntity<CaracteristicaSalidaDto> crear(@RequestBody Caracteristica caracteristica) {
         return new ResponseEntity<>(caracteristicaService.crear(caracteristica), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<CaracteristicaSalidaDto> actualizar(@PathVariable Long id, @RequestBody Caracteristica caracteristica) {
         return new ResponseEntity<>(caracteristicaService.actualizar(id, caracteristica), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         caracteristicaService.eliminar(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
