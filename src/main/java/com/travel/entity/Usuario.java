@@ -104,7 +104,7 @@ public class Usuario {
 
     public void setContrasena(String contrasena) {
         this.contrasena = contrasena;
-    }
+    }   
 
     public Set<Role> getRoles() {
         return roles;
@@ -113,7 +113,4 @@ public class Usuario {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
-    // Getters y Setters
-    
 }

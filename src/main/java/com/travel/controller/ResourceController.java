@@ -10,4 +10,3 @@ public class ResourceController {
         return "Travel Application!";
     }
 }
-
