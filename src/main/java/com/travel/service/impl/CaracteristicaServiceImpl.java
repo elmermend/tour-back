@@ -53,8 +53,8 @@ public class CaracteristicaServiceImpl implements CaracteristicaService {
     public CaracteristicaSalidaDto actualizar(Long id, Caracteristica caracteristicaActualizada) {
         Caracteristica caracteristica = obtenerPorId(id);
 
-        caracteristica.setNombre(caracteristicaActualizada.getNombre());
-        caracteristica.setIcono(caracteristicaActualizada.getIcono());
+        caracteristica.setName(caracteristicaActualizada.getName());
+        caracteristica.setIcon(caracteristicaActualizada.getIcon());
 
 
         Caracteristica actualizada = caracteristicaRepository.save(caracteristica);

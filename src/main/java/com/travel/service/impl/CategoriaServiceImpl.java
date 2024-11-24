@@ -54,15 +54,15 @@ public class CategoriaServiceImpl implements CategoriaService {
     public CategoriaSalidaDto  crear(CategoriaDto categoriaDto) {
         Categoria categoria = new Categoria();
 
-        categoria.setTitulo(categoriaDto.getName());
+        categoria.setName(categoriaDto.getName());
         categoria.setDescripcion(categoriaDto.getDescripcion());
 
         if (categoriaDto.getImage() != null && !categoriaDto.getImage().isEmpty()) {
             String imagenUrl = s3Service.subirImagen(categoriaDto.getImage());
-            categoria.setImagenRepresentativa(imagenUrl);
+            categoria.setImage(imagenUrl);
 
         }
-        categoria.setTitulo(categoriaDto.getName());
+        categoria.setName(categoriaDto.getName());
         categoria.setDescripcion(categoriaDto.getDescripcion());
 
 
@@ -77,12 +77,12 @@ public class CategoriaServiceImpl implements CategoriaService {
         // Si hay una nueva imagen, eliminar la anterior y subir la nueva
 
         if (categoriaDto.getImage() != null && !categoriaDto.getImage().isEmpty()) {
-            s3Service.eliminarImagen(categoriaExistente.getImagenRepresentativa()); // Eliminar la imagen anterior
+            s3Service.eliminarImagen(categoriaExistente.getImage()); // Eliminar la imagen anterior
             String nuevaImagenUrl = s3Service.subirImagen(categoriaDto.getImage()); // Subir la nueva
-            categoriaExistente.setImagenRepresentativa(nuevaImagenUrl);
+            categoriaExistente.setImage(nuevaImagenUrl);
         }
 
-        categoriaExistente.setTitulo(categoriaDto.getName());
+        categoriaExistente.setName(categoriaDto.getName());
 
         categoriaExistente.setDescripcion(categoriaDto.getDescripcion());
 
@@ -96,7 +96,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 
         // Eliminar la imagen asociada del bucket
 
-        s3Service.eliminarImagen(categoria.getImagenRepresentativa());
+        s3Service.eliminarImagen(categoria.getImage());
 
 
         // Eliminar la categoría de la base de datos
