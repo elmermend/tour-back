@@ -55,20 +55,26 @@ public class SecurityConfig {
                 .build();
     }
 
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-  CorsConfiguration cc = new CorsConfiguration();
-                cc.setAllowedHeaders(Arrays.asList("Origin,Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers","Authorization"));
-                cc.setExposedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
-  cc.setAllowedOrigins(Arrays.asList("/*"));
-  cc.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT","PATCH"));
-                cc.addAllowedOrigin("*");
-                cc.setMaxAge(Duration.ZERO);
-                cc.setAllowCredentials(Boolean.TRUE);
-  UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-  source.registerCorsConfiguration("/**", cc);
-  return source;
- }
+        CorsConfiguration cc = new CorsConfiguration();
+
+        // Permitir todos los orígenes solo en desarrollo
+        cc.addAllowedOriginPattern("*"); // Usa addAllowedOriginPattern en lugar de addAllowedOrigin para admitir orígenes dinámicos
+        cc.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"));
+        cc.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept"));
+        cc.setExposedHeaders(Arrays.asList("Authorization")); // Si necesitas exponer algún header
+        cc.setAllowCredentials(true); // Habilitar cookies o credenciales
+        cc.setMaxAge(Duration.ofHours(1)); // Cachear la configuración por 1 hora
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", cc); // Aplica la configuración a todas las rutas
+        return source;
+    }
+
+
+
 
 
 }
