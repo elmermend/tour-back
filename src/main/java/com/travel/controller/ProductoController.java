@@ -2,15 +2,12 @@ package com.travel.controller;
 
 import java.util.List;
 
+import com.travel.dto.entrada.ProductoDto;
+import com.travel.dto.salida.ProductoSalidaDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.travel.entity.Producto;
@@ -23,42 +20,29 @@ public class ProductoController {
     @Autowired
     ProductoService productoService;
 
-    @GetMapping("/")    
-    List<Producto> listarProductos() {    
-        return productoService.listarProductos();
+    @GetMapping
+    public ResponseEntity<List<ProductoSalidaDto>> listarTodosLosProductos() {
+        List<ProductoSalidaDto> productos = productoService.listarTodosLosProductos();
+        return new ResponseEntity<>(productos, HttpStatus.OK);
     }
 
-    @GetMapping("/{nombre}")
-    Producto listarProductoPorNombre(@PathVariable String nombre) {    
-        return productoService.listarProductosPorNombre(nombre);
+    @PostMapping
+    public ResponseEntity<ProductoSalidaDto> crearProducto(@ModelAttribute ProductoDto productoDTO) {
+        ProductoSalidaDto nuevoProducto = productoService.crearProducto(productoDTO);
+        return ResponseEntity.ok(nuevoProducto);
     }
 
-    @PostMapping("/")
-    Producto newProducto(@RequestBody Producto producto)  {
-        Producto newProducto = null;
-        try {
-            newProducto = productoService.agregarProducto(producto);
-        } catch (TravelRepositoryException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
-        return newProducto;
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductoSalidaDto> listarProductoPorId(@PathVariable("id") Long productoId) {
+        ProductoSalidaDto productoSalidaDto = productoService.listarProductoPorId(productoId);
+        return new ResponseEntity<>(productoSalidaDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    void borrarProducto(@PathVariable long id) {
-        try {
-            productoService.deleteProducto(id);
-        } catch (TravelRepositoryException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        productoService.eliminar(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/imagenes/{id}")
-    void borrarImagen(@PathVariable long id) {
-        try {
-            productoService.borrarImagen(id);
-        } catch (TravelRepositoryException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
-    }
+
 }

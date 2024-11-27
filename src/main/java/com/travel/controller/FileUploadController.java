@@ -64,7 +64,7 @@ public class FileUploadController {
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
 				"attachment; filename=\"" + file.getFilename() + "\"").body(file);
 	}
-
+/*
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam(required = true, name = "file") MultipartFile file, @RequestParam(required = true, name = "productId") String productId,
 			RedirectAttributes redirectAttributes) {
@@ -87,7 +87,7 @@ public class FileUploadController {
 
 		return "redirect:/travel/imagenes/";
 	}
-
+*/
 	@ExceptionHandler(StorageFileNotFoundException.class)
 	public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
 		return ResponseEntity.notFound().build();
