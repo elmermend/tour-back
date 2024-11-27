@@ -94,8 +94,13 @@ public class CategoriaServiceImpl implements CategoriaService {
     public void eliminar(Long id) {
         Categoria categoria = obtenerPorId(id);
 
-        // Eliminar la imagen asociada del bucket
+        // Verificar si la categoría tiene productos asociados
+        if (categoria.getProductos() != null && !categoria.getProductos().isEmpty()) {
+            // Si tiene productos asociados, lanzar una excepción o retornar algún valor
+            throw new IllegalStateException("No se puede eliminar la categoría porque tiene productos asociados.");
+        }
 
+        // Eliminar la imagen asociada del bucket
         s3Service.eliminarImagen(categoria.getImage());
 
 

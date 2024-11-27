@@ -52,9 +52,15 @@ public class CategoriaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        categoriaService.eliminar(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<String> eliminar(@PathVariable Long id) {
+        try {
+            // Llamar al servicio para eliminar la categoría
+            categoriaService.eliminar(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Eliminar exitosa
+        } catch (IllegalStateException e) {
+            // Si la categoría tiene productos, se captura la excepción y se envía el mensaje de error
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); // Error con mensaje
+        }
     }
 
 }

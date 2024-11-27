@@ -1,5 +1,6 @@
 package com.travel.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -8,6 +9,7 @@ import com.travel.dto.entrada.FechaDisponibleDto;
 import com.travel.dto.entrada.ProductoDto;
 import com.travel.dto.salida.ProductoSalidaDto;
 import com.travel.entity.*;
+import com.travel.exception.NombreProductoYaExistenteException;
 import com.travel.exception.NotFoundException;
 import com.travel.repository.CaracteristicaRepository;
 import com.travel.repository.CategoriaRepository;
@@ -52,6 +54,11 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public ProductoSalidaDto crearProducto(ProductoDto productoDTO) {
+
+        if (productoRepository.existsByNombre(productoDTO.getNombre())) {
+            throw new NombreProductoYaExistenteException("El nombre del producto ya está en uso.");
+        }
+
         Producto producto = modelMapper.map(productoDTO, Producto.class);
         producto.setId(null);
 
@@ -125,6 +132,25 @@ public class ProductoServiceImpl implements ProductoService {
     private List<String> extraerImagenUrls(Producto producto) {
         return producto.getImagenes().stream()
                 .map(ProductoImagen::getImagen)
+                .collect(Collectors.toList());
+    }
+
+
+    public List<ProductoSalidaDto> obtenerProductosPorCategoria(Long categoriaId) {
+        // Obtener lista de productos por categoría
+        List<Producto> productosCategoria = productoRepository.findByCategoriaId(categoriaId);
+
+        // Convertir todos los productos a ProductoSalidaDto
+        return productosCategoria.stream()
+                .map(this::convertirAProductoSalidaDto)  // Convierte cada producto en ProductoSalidaDto
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductoSalidaDto> obtenerProductosDisponiblesPorRangoDeFechas(LocalDate fechaInicio, LocalDate fechaFinal) {
+        // Llamamos al repositorio con la consulta mejorada que ordena por la cantidad de fechas disponibles
+        List<Producto> productosBusqueda = productoRepository.findProductosDisponiblesPorRangoDeFechasConContadorYFechaCercana(fechaInicio, fechaFinal);
+        return productosBusqueda.stream()
+                .map(this::convertirAProductoSalidaDto)
                 .collect(Collectors.toList());
     }
 

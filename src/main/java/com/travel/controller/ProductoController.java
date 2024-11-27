@@ -1,10 +1,12 @@
 package com.travel.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.travel.dto.entrada.ProductoDto;
 import com.travel.dto.salida.ProductoSalidaDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +31,7 @@ public class ProductoController {
     @PostMapping
     public ResponseEntity<ProductoSalidaDto> crearProducto(@ModelAttribute ProductoDto productoDTO) {
         ProductoSalidaDto nuevoProducto = productoService.crearProducto(productoDTO);
-        return ResponseEntity.ok(nuevoProducto);
+        return new ResponseEntity<>(nuevoProducto,  HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -44,5 +46,17 @@ public class ProductoController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/categoria/{categoriaId}")
+    public List<ProductoSalidaDto> obtenerProductosPorCategoria(@PathVariable Long categoriaId) {
+        return productoService.obtenerProductosPorCategoria(categoriaId);
+    }
 
+    @GetMapping("/disponibles")
+    public ResponseEntity<List<ProductoSalidaDto>> obtenerProductosDisponibles(
+            @RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam("fechaFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFinal) {
+
+        List<ProductoSalidaDto> productos = productoService.obtenerProductosDisponiblesPorRangoDeFechas(fechaInicio, fechaFinal);
+        return new ResponseEntity<>(productos, HttpStatus.OK);
+    }
 }
