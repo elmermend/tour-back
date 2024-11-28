@@ -12,7 +12,7 @@ public class Favorito {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
+    private UserEntity usuario;
 
     @ManyToOne
     @JoinColumn(name = "producto_id")
@@ -27,11 +27,11 @@ public class Favorito {
         this.id = id;
     }
 
-    public Usuario getUsuario() {
+    public UserEntity getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(UserEntity usuario) {
         this.usuario = usuario;
     }
 

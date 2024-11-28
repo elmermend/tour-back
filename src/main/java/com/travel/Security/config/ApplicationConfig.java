@@ -2,7 +2,6 @@ package com.travel.Security.config;
 
 
 import com.travel.repository.UserRepository;
-import com.travel.service.UsuarioDetailsService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,8 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ApplicationConfig {
 
     private final UserRepository userRepository;
-    @Autowired
-    private final UserDetailsService usuarioDetailsService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception
@@ -36,7 +33,7 @@ public class ApplicationConfig {
     public AuthenticationProvider authenticationProvider()
     {
         DaoAuthenticationProvider authenticationProvider= new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(usuarioDetailsService);
+        authenticationProvider.setUserDetailsService(userDetailService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
@@ -46,10 +43,10 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
- /* @Bean
+    @Bean
     public UserDetailsService userDetailService() {
         return username -> userRepository.findByUsername(username)
                 .orElseThrow(()-> new UsernameNotFoundException("User not fournd"));
     }
-*/
+
 }

@@ -1,13 +1,15 @@
 package com.travel.service;
 
+import com.travel.dto.salida.ProductoSalidaDto;
 import com.travel.entity.Favorito;
-import com.travel.entity.Usuario;
+import com.travel.entity.UserEntity;
 import com.travel.entity.Producto;
 
 import java.util.List;
 
 public interface FavoritoService {
-    Favorito guardarFavorito(Usuario usuario, Producto producto);
+    boolean guardarFavorito(String username, Long productoId);
 
-    List<Favorito> obtenerFavoritosPorUsuario(Usuario usuario);
+    List<ProductoSalidaDto> obtenerFavoritosPorUsuario(String currentUserName);
+    void quitarFavorito(String currentUserName, Long productoId);
 }

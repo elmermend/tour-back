@@ -1,12 +1,6 @@
 package com.travel.controller;
-
-import com.travel.entity.Usuario;
-import com.travel.service.EmailService;
+/*
 import com.travel.service.UsuarioDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/travel/public/mail")
@@ -40,4 +34,4 @@ public class MailController {
 
         return "Correo de confirmación reenviado con éxito.";
     }
-}
+}*/
