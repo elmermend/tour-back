@@ -41,7 +41,9 @@ public class SecurityConfig {
                                         "/travel/public/favoritos/**",
                                         "/travel/public/mail/**",
                                         "/travel/users/**",
-                                        "/auth/**"
+                                        "/auth/**",
+                                        "/travel/public/fechas-disponibles/**",
+                                        "/travel/public/reservas/**"
                                        ).permitAll()
                                 //.requestMatchers(HttpMethod.GET, "/algo").hasRole("ADMIN")
                                 // .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()

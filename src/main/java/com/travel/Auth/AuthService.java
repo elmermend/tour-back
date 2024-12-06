@@ -4,6 +4,7 @@ package com.travel.Auth;
 import com.travel.Security.Jwt.JwtService;
 import com.travel.dto.entrada.ActualizarUsuarioRolDto;
 import com.travel.dto.salida.UserSalidaDto;
+import com.travel.dto.salida.UsuarioSalidaDto;
 import com.travel.entity.Role;
 import com.travel.entity.UserEntity;
 import com.travel.exception.NotFoundException;
@@ -118,6 +119,11 @@ public class AuthService {
     public UserEntity getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado con id: " + userId));
+    }
+
+    public UsuarioSalidaDto obtenerUsuarioPorId(Long id) {
+        UserEntity user = getUserById(id);
+        return new UsuarioSalidaDto(user.getNombre(), user.getApellido(), user.getFecha());
     }
 
 }

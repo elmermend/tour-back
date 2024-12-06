@@ -16,5 +16,7 @@ public class FechaDisponibleDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fecha;
     private int stock;
+    private int duracionDias;
+    private int disponibilidad;
 
 }

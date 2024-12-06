@@ -16,6 +16,9 @@ public class FechaDisponible {
 
     private int stock;
 
+    private int duracionDias;
+    private int disponibilidad = 0;
+
     @ManyToOne
     @JoinColumn(name = "producto_id")
     private Producto producto;
@@ -26,6 +29,17 @@ public class FechaDisponible {
         this.fecha = fecha;
         this.stock = stock;
         this.producto = producto;
+    }
+    public boolean tieneStock() {
+        return stock > disponibilidad;
+    }
+
+    public void incrementarDisponibilidad() {
+        if (tieneStock()) {
+            disponibilidad++;
+        } else {
+            throw new IllegalStateException("No hay stock disponible");
+        }
     }
 
     public Long getId() {
@@ -50,6 +64,22 @@ public class FechaDisponible {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public int getDuracionDias() {
+        return duracionDias;
+    }
+
+    public void setDuracionDias(int duracionDias) {
+        this.duracionDias = duracionDias;
+    }
+
+    public int getDisponibilidad() {
+        return disponibilidad;
+    }
+
+    public void setDisponibilidad(int disponibilidad) {
+        this.disponibilidad = disponibilidad;
     }
 
     public Producto getProducto() {

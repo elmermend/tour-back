@@ -79,6 +79,7 @@ public class ProductoServiceImpl implements ProductoService {
             FechaDisponible fecha = new FechaDisponible();
             fecha.setFecha(fechaDto.getFecha());
             fecha.setStock(fechaDto.getStock());
+            fecha.setDuracionDias(fechaDto.getDuracionDias());
             fecha.setProducto(producto);
             return fecha;
         }).collect(Collectors.toList());

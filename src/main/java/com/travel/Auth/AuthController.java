@@ -3,6 +3,7 @@ package com.travel.Auth;
 
 import com.travel.dto.entrada.ActualizarUsuarioRolDto;
 import com.travel.dto.salida.UserSalidaDto;
+import com.travel.dto.salida.UsuarioSalidaDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,12 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioSalidaDto> obtenerUsuarioPorId(@PathVariable Long id) {
+        UsuarioSalidaDto usuario = authService.obtenerUsuarioPorId(id);
+        return ResponseEntity.ok(usuario);
     }
 
 
