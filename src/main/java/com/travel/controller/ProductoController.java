@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -28,9 +31,12 @@ public class ProductoController {
         return new ResponseEntity<>(productos, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<ProductoSalidaDto> crearProducto(@ModelAttribute ProductoDto productoDTO) {
-        ProductoSalidaDto nuevoProducto = productoService.crearProducto(productoDTO);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+        ProductoSalidaDto nuevoProducto = productoService.crearProducto(currentUserName,productoDTO);
         return new ResponseEntity<>(nuevoProducto,  HttpStatus.CREATED);
     }
 
@@ -40,6 +46,7 @@ public class ProductoController {
         return new ResponseEntity<>(productoSalidaDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         productoService.eliminar(id);

@@ -13,7 +13,9 @@ import com.travel.exception.NombreProductoYaExistenteException;
 import com.travel.exception.NotFoundException;
 import com.travel.repository.CaracteristicaRepository;
 import com.travel.repository.CategoriaRepository;
+import com.travel.repository.UserRepository;
 import com.travel.service.S3Service;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 // Clase de servicio para manejar la lógica de productos
 @Service
 public class ProductoServiceImpl implements ProductoService {
+    private final UserRepository userRepository;
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
     private final CaracteristicaRepository caracteristicaRepository;
@@ -32,12 +35,8 @@ public class ProductoServiceImpl implements ProductoService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public ProductoServiceImpl(
-            ProductoRepository productoRepository,
-            CategoriaRepository categoriaRepository,
-            CaracteristicaRepository caracteristicaRepository,
-            S3Service s3Service,
-            ModelMapper modelMapper) {
+    public ProductoServiceImpl(UserRepository userRepository, ProductoRepository productoRepository, CategoriaRepository categoriaRepository, CaracteristicaRepository caracteristicaRepository, S3Service s3Service, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
         this.productoRepository = productoRepository;
         this.categoriaRepository = categoriaRepository;
         this.caracteristicaRepository = caracteristicaRepository;
@@ -53,7 +52,10 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public ProductoSalidaDto crearProducto(ProductoDto productoDTO) {
+    public ProductoSalidaDto crearProducto(String currentUserName, ProductoDto productoDTO) {
+
+        UserEntity usuario = userRepository.findByUsername(currentUserName)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         if (productoRepository.existsByNombre(productoDTO.getNombre())) {
             throw new NombreProductoYaExistenteException("El nombre del producto ya está en uso.");
@@ -70,6 +72,7 @@ public class ProductoServiceImpl implements ProductoService {
         List<ProductoImagen> productoImagenes = cargarImagenesEnS3(productoDTO.getImagenes(), producto);
         producto.setImagenes(productoImagenes);
 
+        producto.setUsuario(usuario);
         Producto productoGuardado = productoRepository.save(producto);
         return convertirAProductoSalidaDto(productoGuardado);
     }

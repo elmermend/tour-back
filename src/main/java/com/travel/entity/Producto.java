@@ -39,4 +39,9 @@ public class Producto {
             inverseJoinColumns = @JoinColumn(name = "caracteristica_id")
     )
     private List<Caracteristica> caracteristicas;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity usuario; // Relación con el usuario que crea el producto
+
 }

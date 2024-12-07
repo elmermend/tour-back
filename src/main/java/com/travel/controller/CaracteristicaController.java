@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,16 +37,21 @@ public class CaracteristicaController {
         return new ResponseEntity<>(caracteristicaService.obtenerCaracteristicaDtoPorId(id), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<CaracteristicaSalidaDto> crear(@RequestBody Caracteristica caracteristica) {
-        return new ResponseEntity<>(caracteristicaService.crear(caracteristica), HttpStatus.CREATED);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+        return new ResponseEntity<>(caracteristicaService.crear(currentUserName,caracteristica), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CaracteristicaSalidaDto> actualizar(@PathVariable Long id, @RequestBody Caracteristica caracteristica) {
         return new ResponseEntity<>(caracteristicaService.actualizar(id, caracteristica), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         caracteristicaService.eliminar(id);

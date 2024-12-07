@@ -4,10 +4,13 @@ package com.travel.service.impl;
 import com.travel.dto.entrada.CategoriaDto;
 import com.travel.dto.salida.CategoriaSalidaDto;
 import com.travel.entity.Categoria;
+import com.travel.entity.UserEntity;
 import com.travel.exception.NotFoundException;
 import com.travel.repository.CategoriaRepository;
+import com.travel.repository.UserRepository;
 import com.travel.service.CategoriaService;
 import com.travel.service.S3Service;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +21,16 @@ import java.util.stream.Collectors;
 @Service
 public class CategoriaServiceImpl implements CategoriaService {
 
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final CategoriaRepository categoriaRepository;
 
     @Autowired
     private S3Service s3Service;
 
-    
-    public CategoriaServiceImpl(ModelMapper modelMapper, CategoriaRepository categoriaRepository) {
+
+    public CategoriaServiceImpl(UserRepository userRepository, ModelMapper modelMapper, CategoriaRepository categoriaRepository) {
+        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.categoriaRepository = categoriaRepository;
     }
@@ -51,7 +56,10 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
-    public CategoriaSalidaDto  crear(CategoriaDto categoriaDto) {
+    public CategoriaSalidaDto  crear(String currentUserName,CategoriaDto categoriaDto) {
+        UserEntity usuario = userRepository.findByUsername(currentUserName)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
         Categoria categoria = new Categoria();
 
         categoria.setName(categoriaDto.getName());
@@ -65,7 +73,7 @@ public class CategoriaServiceImpl implements CategoriaService {
         categoria.setName(categoriaDto.getName());
         categoria.setDescripcion(categoriaDto.getDescripcion());
 
-
+        categoria.setUsuario(usuario);
         Categoria categoriaGuardada = categoriaRepository.save(categoria);
         return modelMapper.map(categoriaGuardada, CategoriaSalidaDto.class);
     }

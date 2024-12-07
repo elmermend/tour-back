@@ -10,7 +10,7 @@ public interface CategoriaService {
     List<CategoriaSalidaDto> listarTodas();
     CategoriaSalidaDto obtenerCategoriaDtoPorId(Long id);
     Categoria obtenerPorId(Long id);
-    CategoriaSalidaDto  crear(CategoriaDto categoriaDto);
+    CategoriaSalidaDto  crear(String currentUserName,CategoriaDto categoriaDto);
     CategoriaSalidaDto  actualizar(Long id, CategoriaDto categoriaDto);
     void eliminar(Long id);
 

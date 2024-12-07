@@ -24,4 +24,8 @@ public class Caracteristica {
 
     @ManyToMany(mappedBy = "caracteristicas")
     private List<Producto> productos;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity usuario; // Relación con el usuario que crea el producto
 }

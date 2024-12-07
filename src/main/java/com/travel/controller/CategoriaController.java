@@ -10,6 +10,9 @@ import com.travel.service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,12 +40,17 @@ public class CategoriaController {
         return new ResponseEntity<>(categoriaService.obtenerCategoriaDtoPorId(id), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<CategoriaSalidaDto> crear(@ModelAttribute CategoriaDto categoriaDto) {
-        CategoriaSalidaDto nuevaCategoria = categoriaService.crear(categoriaDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+
+        CategoriaSalidaDto nuevaCategoria = categoriaService.crear(currentUserName,categoriaDto);
         return new ResponseEntity<>(nuevaCategoria, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaSalidaDto> actualizarCategoria(
             @PathVariable Long id,
@@ -51,6 +59,7 @@ public class CategoriaController {
         return new ResponseEntity<>(categoriaActualizada, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable Long id) {
         try {

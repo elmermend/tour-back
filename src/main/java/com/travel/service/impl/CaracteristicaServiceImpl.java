@@ -3,10 +3,14 @@ package com.travel.service.impl;
 
 import com.travel.dto.salida.CaracteristicaSalidaDto;
 import com.travel.entity.Caracteristica;
+import com.travel.entity.UserEntity;
 import com.travel.exception.NotFoundException;
 import com.travel.repository.CaracteristicaRepository;
+import com.travel.repository.UserRepository;
 import com.travel.service.CaracteristicaService;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,11 +19,13 @@ import java.util.stream.Collectors;
 @Service
 public class CaracteristicaServiceImpl implements CaracteristicaService {
 
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final CaracteristicaRepository caracteristicaRepository;
 
-    
-    public CaracteristicaServiceImpl(ModelMapper modelMapper, CaracteristicaRepository caracteristicaRepository) {
+    @Autowired
+    public CaracteristicaServiceImpl(UserRepository userRepository, ModelMapper modelMapper, CaracteristicaRepository caracteristicaRepository) {
+        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.caracteristicaRepository = caracteristicaRepository;
     }
@@ -44,7 +50,10 @@ public class CaracteristicaServiceImpl implements CaracteristicaService {
     }
 
     @Override
-    public CaracteristicaSalidaDto  crear(Caracteristica caracteristica) {
+    public CaracteristicaSalidaDto  crear(String currentUserName, Caracteristica caracteristica) {
+        UserEntity usuario = userRepository.findByUsername(currentUserName)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+        caracteristica.setUsuario(usuario);
         Caracteristica nuevaCaracteristica = caracteristicaRepository.save(caracteristica);
         return modelMapper.map(nuevaCaracteristica, CaracteristicaSalidaDto.class);
     }
